@@ -12,6 +12,13 @@ def retrieve_user(msgID):
     userID = db.child("msgIDs").child(msgID).get()
     return userID.val()[list(userID.val())[0]]
 
+def get_specific_user(ctx, user):
+    server = what_server(ctx)
+    for member in server.members:
+        if str(member) == user:
+            pass
+            #continue DM function
+
 def randomize_users(guild, users):
     try:
         if users == "all":
@@ -38,16 +45,24 @@ def randomize_users(guild, users):
         # Send failure message
         pass
 
-def access_santa(userID):
+def access_santa(ctx):
     try:
+        what_server(ctx)
     except:
-        # DM they aren't in a Secret Santa in this server
+        ctx.send("You aren't participating in a Secret Santa in this server")
 
-def access_recipient(userID):
+def access_recipient(ctx):
     try:
+        what_server(ctx)
     except:
-        # DM they aren't in a Secret Santa in this server
+        ctx.send("You aren't participating in a Secret Santa in this server")
 
-store_user(123, "Drin#879")
-
-print(retrieve_user(123))
+def what_server(ctx):
+    message = "Which server would you like to message someone in?"
+    emoji_number = 30
+    shared_servers = ctx.author.mutual_guilds()
+    for server in shared_servers:
+        message += f"\n{server.name} : \U0000{emoji_number}"
+        emoji_number += 1
+    
+    # return server
